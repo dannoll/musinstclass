@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <h1>Musical Instrument Classifier - v14</h1>
+  <h1>Musical Instrument Classifier - v15</h1>
 
   <!-- Input for Image URL -->
   <label for="imageURL">Enter Image URL:</label>
@@ -34,7 +34,7 @@
 
     // Initialize Gradio client after the page has loaded
     window.onload = async () => {
-      app = await client("https://dannoll-minstclass.hf.space/--replicas/9f6ie/");
+      app = await window.gradio.client("https://dannoll-minstclass.hf.space/--replicas/9f6ie/");
     };
 
     // Function to make a prediction request using an image URL
