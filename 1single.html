@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Musical Inst Classifier v2</title>
+  <title>Gradio API Demo</title>
   <!-- Include @gradio/client library -->
   <script src="https://cdn.jsdelivr.net/npm/@gradio/client@latest"></script>
 </head>
 
 <body>
-  <h1>Musical Instrument Classifier - v5</h1>
+  <h1>Musical Instrument Classifier v6</h1>
 
   <!-- Input for Image URL -->
   <label for="imageURL">Enter Image URL:</label>
@@ -29,76 +29,43 @@
   <progress id="progressBar" max="100" value="0"></progress>
 
   <script>
-    // Function to make a prediction request using an image URL
-    function predictImage() {
-      const imageURL = document.getElementById("imageURL").value;
+    // Initialize Gradio client
+    let app;
+    (async () => {
+      app = await gr.Client("https://dannoll-minstclass.hf.space/--replicas/9f6ie/");
+    })();
 
-      // Show the progress bar
+    // Function to make a prediction request using an image URL
+    async function predictImage() {
+      const imageURL = document.getElementById("imageURL").value;
       const progressBar = document.getElementById("progressBar");
       progressBar.style.display = "block";
       progressBar.value = 0;
 
-      // Create a Gradio client
-      const client = new gr.Client({
-        serverName: "https://dannoll-minstclass.hf.space/--replicas/9f6ie/", // Update with your server URL
-      });
+      // Fetch the image as a blob
+      const response = await fetch(imageURL);
+      const imageBlob = await response.blob();
 
       // Make a prediction request
-      client.predict({
-        api_name: "predict", // Update as per your API endpoint
-        data: {
-          img: imageURL
-        },
-        callback: function (response) {
-          // Hide the progress bar
-          progressBar.style.display = "none";
-
-          // Handle the prediction result
-          displayPrediction(response);
-        },
-        progressCallback: function (progress) {
-          // Update the progress bar value
-          progressBar.value = progress;
-        }
-      });
+      const result = await app.predict("/predict", [imageBlob]);
+      progressBar.style.display = "none";
+      displayPrediction(result.data);
     }
 
     // Function to make a prediction request using an uploaded local photo
-    function predictLocalImage() {
+    async function predictLocalImage() {
       const fileInput = document.getElementById("uploadPhoto");
       const file = fileInput.files[0];
 
       if (file) {
-        // Show the progress bar
         const progressBar = document.getElementById("progressBar");
         progressBar.style.display = "block";
         progressBar.value = 0;
 
-        // Create a Gradio client
-        const client = new gr.Client({
-          serverName: "https://dannoll-minstclass.hf.space/--replicas/9f6ie/", // Update with your server URL
-        });
-
-        // Create a FormData object to send the file
-        const formData = new FormData();
-        formData.append("img", file);
-
         // Make a prediction request
-        client.predict({
-          api_name: "predict", // Update as per your API endpoint
-          data: formData,
-          callback: function (response) {
-            // Hide the progress bar
-            progressBar.style.display = "none";
-
-            // Handle the prediction result
-            displayPrediction(response);
-          },
-          progressCallback: function (progress) {
-            // Update the progress bar value
-            progressBar.value = progress;
-          }
-        });
+        const result = await app.predict("/predict", [file]);
+        progressBar.style.display = "none";
+        displayPrediction(result.data);
       } else {
         alert("Please select a file to upload.");
       }
@@ -108,8 +75,15 @@
     function displayPrediction(response) {
       const outputDiv = document.getElementById("output");
       outputDiv.innerHTML = `<h2>Prediction:</h2>`;
-      outputDiv.innerHTML += `<p>Label: ${response.label}</p>`;
-      outputDiv.innerHTML += `<p>Confidence: ${response.confidences[0].confidence}</p>`;
+
+      if (response === undefined) {
+        // Handle undefined response
+        outputDiv.innerHTML += `<p>No prediction result available.</p>`;
+      } else {
+        // Displaying prediction result assuming response structure contains 'label' and 'confidences'
+        outputDiv.innerHTML += `<p>Label: ${response.label}</p>`;
+        outputDiv.innerHTML += `<p>Confidence: ${response.confidences[0].confidence}</p>`;
+      }
     }
   </script>
 </body>
