@@ -9,7 +9,7 @@ title: Gradio API Demo
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Musical Instrument Classifier</title>
+  <title>Gradio API Demo</title>
   <!-- Include @gradio/client library -->
   <script src="https://cdn.jsdelivr.net/npm/@gradio/client"></script>
 </head>
@@ -64,14 +64,12 @@ title: Gradio API Demo
           serverName: "https://dannoll-minstclass.hf.space/--replicas/9f6ie/",
         });
 
-        // Create a FormData object to send the file
-        const formData = new FormData();
-        formData.append("img", file);
-
         // Make a prediction request
         client.predict({
           api_name: "/predict",
-          data: formData,
+          data: {
+            img: file  // Pass the file directly as data
+          },
           callback: function (response) {
             // Handle the prediction result
             displayPrediction(response);
