@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gradio API Demo</title>
+  <title>Musical Inst Classifier v2</title>
   <!-- Include @gradio/client library -->
   <script src="https://cdn.jsdelivr.net/npm/@gradio/client@latest"></script>
 </head>
@@ -45,7 +45,7 @@
 
       // Make a prediction request
       client.predict({
-        api_name: "predict", // Update as per your API endpoint
+        api_name: "/predict", // Update as per your API endpoint
         data: {
           img: imageURL
         },
@@ -85,7 +85,7 @@
 
         // Make a prediction request
         client.predict({
-          api_name: "predict", // Update as per your API endpoint
+          api_name: "/predict", // Update as per your API endpoint
           data: formData,
           callback: function (response) {
             // Hide the progress bar
