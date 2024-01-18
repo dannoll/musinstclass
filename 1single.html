@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gradio API Demo</title>
-  <!-- Include @gradio/client library -->
-  <script src="https://cdn.jsdelivr.net/npm/@gradio/client"></script>
+  <!-- Include @gradio/client library from CDN as a standalone script -->
+  <script src="https://cdn.jsdelivr.net/npm/@gradio/client@latest"></script>
 </head>
 
 <body>
-  <h1>Musical Instrument Classifier v8</h1>
+  <h1>Musical Instrument Classifier - v10</h1>
 
   <!-- Input for Image URL -->
   <label for="imageURL">Enter Image URL:</label>
@@ -29,11 +29,12 @@
   <progress id="progressBar" max="100" value="0"></progress>
 
   <script>
-    // Initialize Gradio client
     let app;
-    (async () => {
-      app = await gr.Client("https://dannoll-minstclass.hf.space/--replicas/9f6ie/");
-    })();
+
+    // Initialize Gradio client after the page has loaded
+    window.onload = async () => {
+      app = await gradio.client("https://dannoll-minstclass.hf.space/--replicas/9f6ie/");
+    };
 
     // Function to make a prediction request using an image URL
     async function predictImage() {
