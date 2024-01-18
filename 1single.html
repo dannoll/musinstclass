@@ -1,8 +1,3 @@
----
-layout: default
-title: Gradio API Demo
----
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +6,7 @@ title: Gradio API Demo
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gradio API Demo</title>
   <!-- Include @gradio/client library -->
-  <script src="https://cdn.jsdelivr.net/npm/@gradio/client"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@gradio/client@latest"></script>
 </head>
 
 <body>
@@ -24,31 +19,46 @@ title: Gradio API Demo
 
   <!-- Input for Uploading a Local Photo -->
   <label for="uploadPhoto">Upload a Local Photo:</label>
-  <input type="file" id="uploadPhoto" accept="image/*"> <!-- Added 'accept' attribute -->
+  <input type="file" id="uploadPhoto" accept="image/*">
   <button onclick="predictLocalImage()">Predict</button>
 
   <!-- Output to display the prediction results -->
   <div id="output"></div>
+
+  <!-- Progress bar -->
+  <progress id="progressBar" max="100" value="0"></progress>
 
   <script>
     // Function to make a prediction request using an image URL
     function predictImage() {
       const imageURL = document.getElementById("imageURL").value;
 
+      // Show the progress bar
+      const progressBar = document.getElementById("progressBar");
+      progressBar.style.display = "block";
+      progressBar.value = 0;
+
       // Create a Gradio client
       const client = new gr.Client({
-        serverName: "https://dannoll-minstclass.hf.space/--replicas/9f6ie/",
+        serverName: "https://your-gradio-api-server.com", // Update with your server URL
       });
 
       // Make a prediction request
       client.predict({
-        api_name: "/predict",
+        api_name: "predict", // Update as per your API endpoint
         data: {
           img: imageURL
         },
         callback: function (response) {
+          // Hide the progress bar
+          progressBar.style.display = "none";
+
           // Handle the prediction result
           displayPrediction(response);
+        },
+        progressCallback: function (progress) {
+          // Update the progress bar value
+          progressBar.value = progress;
         }
       });
     }
@@ -59,20 +69,34 @@ title: Gradio API Demo
       const file = fileInput.files[0];
 
       if (file) {
+        // Show the progress bar
+        const progressBar = document.getElementById("progressBar");
+        progressBar.style.display = "block";
+        progressBar.value = 0;
+
         // Create a Gradio client
         const client = new gr.Client({
-          serverName: "https://dannoll-minstclass.hf.space/--replicas/9f6ie/",
+          serverName: "https://your-gradio-api-server.com", // Update with your server URL
         });
+
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append("img", file);
 
         // Make a prediction request
         client.predict({
-          api_name: "/predict",
-          data: {
-            img: file  // Pass the file directly as data
-          },
+          api_name: "predict", // Update as per your API endpoint
+          data: formData,
           callback: function (response) {
+            // Hide the progress bar
+            progressBar.style.display = "none";
+
             // Handle the prediction result
             displayPrediction(response);
+          },
+          progressCallback: function (progress) {
+            // Update the progress bar value
+            progressBar.value = progress;
           }
         });
       } else {
