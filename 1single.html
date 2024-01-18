@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <h1>Musical Instrument Classifier - v3</h1>
+  <h1>Musical Instrument Classifier - v4</h1>
 
   <!-- Input for Image URL -->
   <label for="imageURL">Enter Image URL:</label>
@@ -45,7 +45,7 @@
 
       // Make a prediction request
       client.predict({
-        api_name: "/predict", // Update as per your API endpoint
+        api_name: "predict", // Update as per your API endpoint
         data: {
           img: imageURL
         },
@@ -85,7 +85,7 @@
 
         // Make a prediction request
         client.predict({
-          api_name: "/predict", // Update as per your API endpoint
+          api_name: "predict", // Update as per your API endpoint
           data: formData,
           callback: function (response) {
             // Hide the progress bar
