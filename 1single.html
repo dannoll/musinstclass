@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <h1>Musical Instrument Classifier v6</h1>
+  <h1>Musical Instrument Classifier v7</h1>
 
   <!-- Input for Image URL -->
   <label for="imageURL">Enter Image URL:</label>
@@ -47,7 +47,7 @@
       const imageBlob = await response.blob();
 
       // Make a prediction request
-      const result = await app.predict("/predict", [imageBlob]);
+      const result = await app.predict("predict", [imageBlob]);
       progressBar.style.display = "none";
       displayPrediction(result.data);
     }
@@ -63,7 +63,7 @@
         progressBar.value = 0;
 
         // Make a prediction request
-        const result = await app.predict("/predict", [file]);
+        const result = await app.predict("predict", [file]);
         progressBar.style.display = "none";
         displayPrediction(result.data);
       } else {
