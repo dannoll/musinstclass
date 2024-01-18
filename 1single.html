@@ -24,7 +24,7 @@ title: Gradio API Demo
 
   <!-- Input for Uploading a Local Photo -->
   <label for="uploadPhoto">Upload a Local Photo:</label>
-  <input type="file" id="uploadPhoto">
+  <input type="file" id="uploadPhoto" accept="image/*"> <!-- Added 'accept' attribute -->
   <button onclick="predictLocalImage()">Predict</button>
 
   <!-- Output to display the prediction results -->
